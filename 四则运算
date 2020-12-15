@@ -1,0 +1,78 @@
+#include <iostream>
+using namespace std;
+int expression_value();
+int term_value();
+int factor_value();
+int main()
+{
+    while (cin.peek() != EOF) {
+        while (cin.peek() == ' ' || cin.peek() == '\n')
+            cin.get();
+        if (cin.peek() != EOF)
+            cout << expression_value() << endl;
+    }
+    return 0;
+}
+int expression_value() {
+    int result = term_value();
+    while (1) {
+        char op = cin.peek();
+        if (op == ' ')cin.get();
+        else if (op == '+') {
+            cin.get();
+            result += term_value();
+        }
+        else if (op == '-') {
+            cin.get();
+            result -= term_value();
+        }
+        else break;
+    }
+    return result;
+}
+int term_value() {
+    int result = factor_value();
+    while (1) {
+        char op = cin.peek();
+        if (op == ' ')cin.get();
+        else if (op == '*') {
+            cin.get();
+            result *= factor_value();
+        }
+        else if (op == '/') {
+            cin.get();
+            result /= factor_value();
+        }
+        else break;
+    }
+    return result;
+}
+int factor_value() {
+    int result = 0;
+    char number[10] = { 0 };
+    int i = 0;
+    while (1) {
+        char op = cin.peek();
+        if (op == ' ')cin.get();
+        else if (op == '(') {
+            cin.get();
+            result = expression_value();
+            cin.get();
+        }
+        else if (op == '-') {
+            if (result==0&&number[0]==0) {
+                cin.get();
+                result -= factor_value();
+            }
+            else break;
+        }
+        else if (op >= '0' && op <= '9') {
+            cin.get();
+            number[i] = op;
+            i++;
+        }
+        else break;
+    }
+    result += atoi(number);
+    return result;
+}
